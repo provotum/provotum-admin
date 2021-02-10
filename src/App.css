@@ -10,7 +10,7 @@
 }
 
 
-html, body {
+html, .body {
   padding: 0;
   margin: 0;
 }
@@ -27,3 +27,57 @@ html, body {
   grid-gap: 10px;
 }
 
+form .form-element {
+  display: block;
+  width: 200px;
+  margin-bottom: 1rem;
+  margin-right: 1rem;
+}
+form .form-element.wide {
+  width: 400px;
+}
+form .MuiInputBase-root {
+  width: 100%;
+}
+form .form-row {
+  display: flex;
+  align-items: flex-start;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+form .registered-question {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+form .registered-question .left {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+form .registered-answer {
+  margin-left: 1rem;
+}
+form .form-row.list {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+.question {
+  display: flex;
+  align-items: center;
+}
+
+.answers {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.answers > * {
+  margin-right: 1rem;
+
+}
+
+.question-entry .answer {
+  margin-left: 2rem;
+}

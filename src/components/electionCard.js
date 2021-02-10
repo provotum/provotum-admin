@@ -1,45 +1,37 @@
-import { Button, Card, CardActions, CardContent, CardHeader, Typography } from '@material-ui/core';
+import { Button, Card, CardActions, CardContent, CardHeader, Typography, Collapse, IconButton, Avatar } from '@material-ui/core';
+import { Lock, HourglassEmpty, HowToVote, GroupWork, ExpandMore } from '@material-ui/icons';
 
 import { Link } from 'react-router-dom'
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import Collapse from '@material-ui/core/Collapse';
-import IconButton from '@material-ui/core/IconButton';
-import Avatar from '@material-ui/core/Avatar';
-import { LockOpen, Lock, Pause } from '@material-ui/icons';
-
 import { useState } from 'react';
 
-export function VoteCard(props) {
-    let vote = props.vote;
+export function ElectionCard(props) {
+    let election = props.election;
     const [expanded, setExpanded] = useState(false);
-
-
-
 
     const handleExpandClick = () => {
         setExpanded(!expanded);
     };
 
-    const icon = (vote) => {
-        switch (vote.status) {
-            case 'pending':
-                return <Pause />
-            case 'open':
-                return <LockOpen />
-            case 'closed':
-                return <Lock />
+    const icon = (election) => {
+        switch (election.phase) {
+            case 'Tallying':
+                return <HourglassEmpty />
+            case 'Voting':
+                return <HowToVote />
+            case 'DistributedKeyGeneration':
+                return <GroupWork />
             default:
                 return <Lock />
         }
     };
 
-    const voteQuestions = (vote) => {
-        return vote.questions.map(q => (
+    const electionSubjects = (election) => {
+        return election.subjects.map(s => (
 
-            <div key={vote.id + q.question}>
-                <Typography paragraph>{q.question}</Typography>
+            <div key={election.electionId + s[0]}>
+                <Typography paragraph>{s[1]}</Typography>
                 <Typography variant="body2" color="textSecondary" component="p">
-                    {q.answerTrue}, {q.answerFalse}
+                    {'Yes'}, {'No'}
                 </Typography>
             </div>
         ));
@@ -50,16 +42,16 @@ export function VoteCard(props) {
             <CardHeader
                 avatar={
                     <Avatar className="bg-accent" >
-                        {icon(vote)}
+                        {icon(election)}
                     </Avatar>
                 }
-                title={vote.title}
-                subheader={vote.createdOn}>
+                title={election.title}
+                subheader={election.createdOn}>
 
             </CardHeader>
             <CardContent>
                 <Typography variant="body2" color="textSecondary" component="p">
-                    {vote.description}
+                    {election.description}
                 </Typography>
 
             </CardContent>
@@ -67,8 +59,8 @@ export function VoteCard(props) {
                 <Button>
                     edit
                 </Button>
-                <Link to={`/votes/${vote.id}`} className="button muted-button">
-                    View Vote
+                <Link to={`/elections/${election.id}`} className="button muted-button">
+                    View election
       </Link>
                 <IconButton
 
@@ -76,12 +68,12 @@ export function VoteCard(props) {
                     aria-expanded={expanded}
                     aria-label="show more"
                 >
-                    <ExpandMoreIcon />
+                    <ExpandMore />
                 </IconButton>
             </CardActions>
             <Collapse in={expanded} timeout="auto" unmountOnExit>
                 <CardContent>
-                    {voteQuestions(vote)}
+                    {electionSubjects(election)}
                 </CardContent>
             </Collapse>
         </Card>

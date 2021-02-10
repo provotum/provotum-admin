@@ -5,12 +5,46 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { Provider } from "react-redux";
 import store from './store';
+import { createMuiTheme, ThemeProvider, responsiveFontSizes } from '@material-ui/core/styles';
+import teal from '@material-ui/core/colors/teal';
+import { SubstrateContextProvider } from './substrate';
+
+let theme = createMuiTheme({
+  typography: {
+    fontFamily: [
+      '-apple-system',
+      'BlinkMacSystemFont',
+      '"Segoe UI"',
+      'Roboto',
+      '"Helvetica Neue"',
+      'Arial',
+      'sans-serif',
+      '"Apple Color Emoji"',
+      '"Segoe UI Emoji"',
+      '"Segoe UI Symbol"',
+    ].join(','),
+  },
+  palette: {
+    primary: teal,
+    secondary: {
+      main: '#ff4081',
+    },
+  },
+});
+
+theme = responsiveFontSizes(theme);
+
 
 ReactDOM.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <App />
-    </Provider>
+    <SubstrateContextProvider>
+      <Provider store={store}>
+        <ThemeProvider theme={theme}>
+          <App />
+        </ThemeProvider>
+
+      </Provider>
+    </SubstrateContextProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

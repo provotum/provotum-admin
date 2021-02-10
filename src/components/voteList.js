@@ -1,36 +1,47 @@
-import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import Button from '@material-ui/core/Button';
 
 
 import {
-    fetchVotes,
-    selectVotes,
-} from './../redux/votesSlice';
-import { VoteCard } from './voteCard';
+    selectElections,
+} from '../redux/electionSlice';
+import { ElectionCard } from './electionCard';
 
 export function VoteList() {
     // Components should always try to select the smallest possible amount of data they need from the store, which will help ensure that it only renders when it actually needs to.
-    const votes = useSelector(selectVotes);
-    const dispatch = useDispatch();
+    const elections = useSelector(selectElections);
+    const [filter, setFilter] = useState('');
 
-    //get vote status from state and load votes if not done yet
-    const voteStatus = useSelector(state => state.votes.status);
-    useEffect(() => {
-        if (voteStatus === 'idle') {
-            dispatch(fetchVotes())
+    const changeFilter = (value) => {
+        setFilter(value);
+    }
+
+    const filteredElections = () => {
+        switch (filter) {
+            case 'current':
+                return elections.filter(v => v.status === 'open');
+            default:
+                return elections;
         }
-    }, [voteStatus, dispatch]);
+    }
 
-    const renderedVotes = votes.map(vote => (
-        <VoteCard vote={vote} key={vote.id}></VoteCard>
+    const renderedElections = filteredElections().map(election => (
+        <ElectionCard election={election} key={election.electionId}></ElectionCard>
     ));
 
 
     return (
         <div>
             <h2>votes</h2>
+            <Button
+                onClick={() => { changeFilter('current'); }}
+                variant="contained" color="primary">open</Button>
+            <Button
+                onClick={() => { changeFilter(''); }}
+                variant="contained" color="primary">reset</Button>
             <div className="vote-list">
-                {renderedVotes}
+                {renderedElections}
             </div>
         </div>
     )
