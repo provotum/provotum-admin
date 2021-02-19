@@ -4,8 +4,8 @@ import { TextField, Button, Chip, IconButton, Divider } from '@material-ui/core'
 import { Save, Add, Backspace } from '@material-ui/icons';
 
 import {
-    addElection,
-} from '../redux/electionSlice';
+    newVote,
+} from '../features/elections/electionSlice';
 
 export function AddVoteForm() {
     // Components should always try to select the smallest possible amount of data they need from the store, which will help ensure that it only renders when it actually needs to.
@@ -19,6 +19,9 @@ export function AddVoteForm() {
     const [answerTrue, setAnswerTrue] = useState('');
     const [answerFalse, setAnswerFalse] = useState('');
     const [status] = useState('pending');
+
+    const vaUrl = process.env.REACT_APP_VA_URL
+
 
     const addQuestion = () => {
         let newQuestion = {
@@ -116,7 +119,7 @@ export function AddVoteForm() {
                         color="primary"
                         size="medium"
                         startIcon={<Save />}
-                        onClick={() => dispatch(addElection(buildElection()))}
+                        onClick={() => dispatch(newVote(vaUrl))}
                     >
                         submit vote
         </Button>

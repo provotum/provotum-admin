@@ -1,16 +1,27 @@
 import { Button, Card, CardActions, CardContent, CardHeader, Typography, Collapse, IconButton, Avatar } from '@material-ui/core';
 import { Lock, HourglassEmpty, HowToVote, GroupWork, ExpandMore } from '@material-ui/icons';
+import { combineDkgKeys } from './../features/elections/electionSlice';
 
 import { Link } from 'react-router-dom'
 import { useState } from 'react';
 
+import { useDispatch } from 'react-redux';
+
+
 export function ElectionCard(props) {
     let election = props.election;
+    const dispatch = useDispatch();
     const [expanded, setExpanded] = useState(false);
+    const vaUrl = process.env.REACT_APP_VA_URL
 
     const handleExpandClick = () => {
         setExpanded(!expanded);
     };
+
+    const triggerDkg = (electionId) => {
+        console.log('triggering dkg')
+        dispatch(combineDkgKeys({ vaUrl: vaUrl, electionId: electionId }));
+    }
 
     const icon = (election) => {
         switch (election.phase) {
@@ -51,7 +62,7 @@ export function ElectionCard(props) {
             </CardHeader>
             <CardContent>
                 <Typography variant="body2" color="textSecondary" component="p">
-                    {election.description}
+                    {election.phase}
                 </Typography>
 
             </CardContent>
@@ -73,6 +84,9 @@ export function ElectionCard(props) {
             </CardActions>
             <Collapse in={expanded} timeout="auto" unmountOnExit>
                 <CardContent>
+                    <Button onClick={() => { triggerDkg(election.electionId) }}>
+                        dkg
+                    </Button>
                     {electionSubjects(election)}
                 </CardContent>
             </Collapse>

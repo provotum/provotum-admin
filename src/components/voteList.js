@@ -5,7 +5,7 @@ import Button from '@material-ui/core/Button';
 
 import {
     selectElections,
-} from '../redux/electionSlice';
+} from '../features/elections/electionSlice';
 import { ElectionCard } from './electionCard';
 
 export function VoteList() {

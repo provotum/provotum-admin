@@ -9,6 +9,9 @@
   background-color: var(--accent) !important;
 }
 
+.sealer {
+  margin-bottom: 1rem;
+}
 
 html, .body {
   padding: 0;

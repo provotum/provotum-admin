@@ -12,6 +12,8 @@
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.5",
     "@testing-library/user-event": "^12.6.3",
+    "axios": "^0.21.1",
+    "dotenv": "^8.2.0",
     "install": "^0.13.0",
     "npm": "^7.5.3",
     "react": "^17.0.1",
@@ -22,7 +24,7 @@
     "web-vitals": "^0.2.4"
   },
   "scripts": {
-    "start_test": "react-app-rewired start",
+    "start_test": "PORT=3011 react-app-rewired start",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
