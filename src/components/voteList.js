@@ -19,10 +19,10 @@ export function VoteList() {
 
     const filteredElections = () => {
         switch (filter) {
-            case 'current':
-                return elections.filter(v => v.status === 'open');
-            default:
+            case '':
                 return elections;
+            default:
+                return elections.filter(v => v.phase === filter);
         }
     }
 
@@ -34,9 +34,16 @@ export function VoteList() {
     return (
         <div>
             <h2>votes</h2>
+            <p>filter</p>
             <Button
-                onClick={() => { changeFilter('current'); }}
-                variant="contained" color="primary">open</Button>
+                onClick={() => { changeFilter('DistributedKeyGeneration'); }}
+                variant="contained" color="primary">dkg</Button>
+            <Button
+                onClick={() => { changeFilter('Tallying'); }}
+                variant="contained" color="primary">tallying</Button>
+            <Button
+                onClick={() => { changeFilter('Voting'); }}
+                variant="contained" color="primary">voting</Button>
             <Button
                 onClick={() => { changeFilter(''); }}
                 variant="contained" color="primary">reset</Button>

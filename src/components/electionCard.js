@@ -1,11 +1,34 @@
 import { Button, Card, CardActions, CardContent, CardHeader, Typography, Collapse, IconButton, Avatar } from '@material-ui/core';
 import { Lock, HourglassEmpty, HowToVote, GroupWork, ExpandMore } from '@material-ui/icons';
 import { combineDkgKeys } from './../features/elections/electionSlice';
-
+import Stepper from '@material-ui/core/Stepper';
+import Step from '@material-ui/core/Step';
+import StepLabel from '@material-ui/core/StepLabel';
+import StepContent from '@material-ui/core/StepContent';
 import { Link } from 'react-router-dom'
 import { useState } from 'react';
+import React from 'react';
+import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 
 import { useDispatch } from 'react-redux';
+
+const useStyles = makeStyles((theme) =>
+    createStyles({
+        root: {
+            width: '100%',
+        },
+        button: {
+            marginTop: theme.spacing(1),
+            marginRight: theme.spacing(1),
+        },
+        actionsContainer: {
+            marginBottom: theme.spacing(2),
+        },
+        resetContainer: {
+            padding: theme.spacing(3),
+        },
+    }),
+);
 
 
 export function ElectionCard(props) {
@@ -13,6 +36,7 @@ export function ElectionCard(props) {
     const dispatch = useDispatch();
     const [expanded, setExpanded] = useState(false);
     const vaUrl = process.env.REACT_APP_VA_URL
+    const classes = useStyles();
 
     const handleExpandClick = () => {
         setExpanded(!expanded);
@@ -48,6 +72,45 @@ export function ElectionCard(props) {
         ));
     }
 
+    function getStepContent(step) {
+        switch (step) {
+            case 0:
+                return {
+                    message: `This vote is currently in the distributed key generation phase. As soon as all sealers have submitted their keys, you can start the voting phase`,
+                    button: 'start vote'
+                };
+            case 1:
+                return {
+                    message: 'This vote is currently in the voting phase. When the official voting period has ended you can start tallying',
+                    button: 'tally'
+                };
+            case 2:
+                return {
+                    message: `This vote is currently being tallied, as soon as the process is finished, you can publish the results`,
+                    button: 'publish'
+                };
+            default:
+                return {
+                    message: 'Unknown step'
+                };
+        }
+    }
+
+    const [activeStep, setActiveStep] = React.useState(0);
+    const steps = ['DistributedKeyGeneration', 'Voting', 'Tallying'];
+
+    const handleNext = () => {
+        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    };
+
+    const handleBack = () => {
+        setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    };
+
+    const handleReset = () => {
+        setActiveStep(0);
+    };
+
     return (
         <Card>
             <CardHeader
@@ -61,9 +124,29 @@ export function ElectionCard(props) {
 
             </CardHeader>
             <CardContent>
-                <Typography variant="body2" color="textSecondary" component="p">
-                    {election.phase}
-                </Typography>
+                <Stepper activeStep={activeStep} orientation="vertical">
+                    {steps.map((label, index) => (
+                        <Step key={label}>
+                            <StepLabel>{label}</StepLabel>
+                            <StepContent>
+                                <Typography>{getStepContent(index).message}</Typography>
+                                <div className={classes.actionsContainer}>
+                                    <div>
+
+                                        <Button
+                                            variant="contained"
+                                            color="primary"
+                                            onClick={handleNext}
+                                            className={classes.button}
+                                        >
+                                            {getStepContent(index).button}
+                                        </Button>
+                                    </div>
+                                </div>
+                            </StepContent>
+                        </Step>
+                    ))}
+                </Stepper>
 
             </CardContent>
             <CardActions>

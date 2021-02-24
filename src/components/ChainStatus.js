@@ -1,6 +1,6 @@
 import { Typography, Button } from '@material-ui/core';
 import React, { useEffect } from 'react'
-import { checkUp, getSealers, getSpec, createSpec, selectHealth, selectSealers, selectSpec, startChain, checkChain, stopChain } from './../features/blockchain/chainSlice';
+import { checkUp, getSealers, getSpec, createSpec, selectHealth, selectSealers, selectSpec, startChain, checkChain, stopChain, selectChain } from './../features/blockchain/chainSlice';
 import { useDispatch, useSelector } from 'react-redux';
 
 export function ChainStatus({ match }) {
@@ -11,6 +11,7 @@ export function ChainStatus({ match }) {
     const health = useSelector(selectHealth);
     const sealers = useSelector(selectSealers);
     const spec = useSelector(selectSpec);
+    const chain = useSelector(selectChain);
 
     useEffect(() => {
         dispatch(checkUp(vaUrl));
@@ -36,8 +37,7 @@ export function ChainStatus({ match }) {
     const renderSealers = sealers.map(s => (
         <div key={s.auraAddress} className="sealer">
             <div><Typography variant="body1">name: {s.name}</Typography></div>
-            <div><Typography variant="body1">aura: {s.auraAddress}</Typography></div>
-            <div><Typography variant="body1">grandpa: {s.grandpaAddress}</Typography></div>
+
         </div>
     ));
 
@@ -73,21 +73,38 @@ export function ChainStatus({ match }) {
         dispatch(stopChain(vaUrl))
     }
 
+    const triggerCheckUp = () => {
+        dispatch(checkChain(vaUrl));
+    };
+    const renderControls = () => {
+        if (chain) {
+            return (
+                <div>
+                    <Button onClick={triggerRestartChain}>restart chain</Button>
+                    <Button onClick={triggerStopChain}>stop chain</Button>
+                </div>
+            )
+        } else {
+            return (
+                <div>
+                    <Button onClick={triggerCreateSpec}>create spec</Button>
+                    <Button onClick={triggerStartChain}>start chain</Button>
+                </div>
+            )
+        }
+    }
+
 
     return (
         <div>
             <Typography variant="h1">Chain</Typography>
             <Typography variant="h2">status</Typography>
-            <Typography variant="body1">up: {health.health}</Typography>
-            <Typography variant="body1">time: {health.timestamp}</Typography>
+            <Typography variant="body1">server: {health.health}</Typography>
+            <Typography variant="body1">chain: {chain ? 'up' : 'down'}</Typography>
+            {renderControls()}
             <Typography variant="h2">Sealers</Typography>
             {renderSealers}
-            <Typography variant="h2">Spec</Typography>
-            {renderSpec}
-            <Button onClick={triggerCreateSpec}>create spec</Button>
-            <Button onClick={triggerStartChain}>start chain</Button>
-            <Button onClick={triggerRestartChain}>restart chain</Button>
-            <Button onClick={triggerStopChain}>stop chain</Button>
-        </div>
+
+        </div >
     )
 }

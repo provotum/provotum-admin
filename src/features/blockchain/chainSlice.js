@@ -49,6 +49,7 @@ export const slice = createSlice({
         vaHealth: '',
         sealers: [],
         spec: {},
+        chain: {},
     },
     //can only mutate the state directly when using the createSlice from the toolkit
     reducers: {
@@ -59,6 +60,9 @@ export const slice = createSlice({
     extraReducers: {
         [checkUp.fulfilled]: (state, action) => {
             state.vaHealth = action.payload;
+        },
+        [checkChain.fulfilled]: (state, action) => {
+            state.chain = action.payload;
         },
         [getSealers.fulfilled]: (state, action) => {
             action.payload.forEach(s => {
@@ -86,5 +90,5 @@ export const { setUrl } = slice.actions
 export const selectHealth = state => state.chain.vaHealth;
 export const selectSealers = state => state.chain.sealers;
 export const selectSpec = state => state.chain.spec;
-
+export const selectChain = state => state.chain.chain;
 export default slice.reducer;

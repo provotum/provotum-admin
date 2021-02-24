@@ -7,8 +7,8 @@ export const checkVotingAuthorityUp = async (vaUrl) => {
 }
 
 export const checkChainUp = async (vaUrl) => {
-    let response = await axios.get(`http://${vaUrl}/chain`);
-    console.log(response.data);
+    let response = await axios.get(`http://${vaUrl}/bootstrap/chain`);
+    console.log('chain up', response.data);
     return response.data;
 }
 
