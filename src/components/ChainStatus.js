@@ -1,6 +1,6 @@
 import { Typography, Button } from '@material-ui/core';
 import React, { useEffect } from 'react'
-import { checkUp, getSealers, getSpec, createSpec, selectHealth, selectSealers, selectSpec, startChain, checkChain, stopChain, selectChain } from './../features/blockchain/chainSlice';
+import { checkUp, getSealers, getSpec, createSpec, selectHealth, selectPeer, selectSealers, selectSpec, startChain, checkChain, stopChain, selectChain, getPeer } from './../features/blockchain/chainSlice';
 import { useDispatch, useSelector } from 'react-redux';
 
 export function ChainStatus({ match }) {
@@ -12,7 +12,7 @@ export function ChainStatus({ match }) {
     const sealers = useSelector(selectSealers);
     const spec = useSelector(selectSpec);
     const chain = useSelector(selectChain);
-
+    const peer = useSelector(selectPeer);
     useEffect(() => {
         dispatch(checkUp(vaUrl));
     }, [dispatch, vaUrl]);
@@ -23,6 +23,10 @@ export function ChainStatus({ match }) {
 
     useEffect(() => {
         dispatch(getSealers(vaUrl));
+    }, [dispatch, vaUrl]);
+
+    useEffect(() => {
+        dispatch(getPeer(vaUrl));
     }, [dispatch, vaUrl]);
 
     /*useEffect(() => {
@@ -40,6 +44,8 @@ export function ChainStatus({ match }) {
 
         </div>
     ));
+
+
 
     const getSpecValues = () => {
         let list = Object.entries(spec).map(s => {
@@ -80,6 +86,8 @@ export function ChainStatus({ match }) {
         if (chain) {
             return (
                 <div>
+                    <Button onClick={triggerCreateSpec}>create spec</Button>
+                    <Button onClick={triggerStartChain}>start chain</Button>
                     <Button onClick={triggerRestartChain}>restart chain</Button>
                     <Button onClick={triggerStopChain}>stop chain</Button>
                 </div>

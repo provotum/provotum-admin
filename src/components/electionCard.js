@@ -1,6 +1,6 @@
 import { Button, Card, CardActions, CardContent, CardHeader, Typography, Collapse, IconButton, Avatar } from '@material-ui/core';
 import { Lock, HourglassEmpty, HowToVote, GroupWork, ExpandMore } from '@material-ui/icons';
-import { combineDkgKeys } from './../features/elections/electionSlice';
+import { combineDkgKeys, startTallyingProcess, endVotingProcess } from './../features/elections/electionSlice';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
@@ -11,6 +11,7 @@ import React from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 
 import { useDispatch } from 'react-redux';
+import { closeVote } from '../features/elections/api';
 
 const useStyles = makeStyles((theme) =>
     createStyles({
@@ -37,6 +38,8 @@ export function ElectionCard(props) {
     const [expanded, setExpanded] = useState(false);
     const vaUrl = process.env.REACT_APP_VA_URL
     const classes = useStyles();
+
+
 
     const handleExpandClick = () => {
         setExpanded(!expanded);
@@ -96,20 +99,28 @@ export function ElectionCard(props) {
         }
     }
 
-    const [activeStep, setActiveStep] = React.useState(0);
-    const steps = ['DistributedKeyGeneration', 'Voting', 'Tallying'];
+    const steps = ['DistributedKeyGeneration', 'Voting', 'Tallying', 'conclusion'];
+    const [activeStep, setActiveStep] = React.useState(steps.indexOf(election.phase));
 
     const handleNext = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+        console.log(`current step: ${steps[activeStep]}`)
+        switch (activeStep) {
+            case 0:
+                dispatch(combineDkgKeys({ vaUrl: vaUrl, electionId: election.electionId }));
+                break;
+            case 1:
+                //dispatch(startTallyingProcess({ vaUrl: vaUrl, electionId: election.electionId }));
+                dispatch(endVotingProcess({ vaUrl, electionId: election.electionId }));
+                break;
+            case 2:
+                dispatch(endVotingProcess({ vaUrl, electionId: election.electionId }));
+                break;
+            default:
+                break;
+        }
+        //setActiveStep((prevActiveStep) => prevActiveStep + 1);
     };
 
-    const handleBack = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep - 1);
-    };
-
-    const handleReset = () => {
-        setActiveStep(0);
-    };
 
     return (
         <Card>

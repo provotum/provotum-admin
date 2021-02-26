@@ -43,3 +43,25 @@ export const combineDistributedKeys = async (vaUrl, electionId) => {
         return []
     }
 }
+
+export const startTally = async (vaUrl, electionId) => {
+    console.log('starting tally');
+    try {
+        let response = await axios.post(`http://${vaUrl}/votes/tally`, { electionId: electionId });
+        console.log(response);
+        return response.data;
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+export const closeVote = async (vaUrl, electionId) => {
+    console.log('closing vote');
+    try {
+        let response = await axios.post(`http://${vaUrl}/votes/close`, { electionId: electionId });
+        console.log(response);
+        return response.data;
+    } catch (e) {
+        console.log(e);
+    }
+}

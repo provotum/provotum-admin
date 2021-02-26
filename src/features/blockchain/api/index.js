@@ -38,6 +38,19 @@ export const fetchChainSpec = async (vaUrl) => {
 
 }
 
+export const fetchPeer = async (vaUrl) => {
+    try {
+        let response = await axios.get(`http://${vaUrl}/bootstrap/peer`);
+        console.log('peer ', response.data);
+        return response.data;
+    } catch (e) {
+        console.log(e);
+        return {};
+    }
+
+
+}
+
 export const startChainNode = async (vaUrl, restart) => {
     console.log('starting chain node')
     try {

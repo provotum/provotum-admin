@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { hexToBn } from '@polkadot/util';
-import { createVote, getVotes, combineDistributedKeys } from './api/index';
+import { createVote, getVotes, combineDistributedKeys, startTally, closeVote } from './api/index';
 // Async Actions (thunks)
 export const newVote = createAsyncThunk('chain/newVote', async (vaUrl) => {
     console.log('creating new vote');
@@ -18,12 +18,15 @@ export const startVotingProcess = createAsyncThunk('elections/startVotingProcess
 
 });
 
-export const endVotingProcess = createAsyncThunk('elections/endVotingProcess', async (electionId) => {
 
+export const startTallyingProcess = createAsyncThunk('elections/startTallyingProcess', async (payload) => {
+    let result = await startTally(payload.vaUrl, payload.electionId);
+    return result;
 });
 
-export const startTallyingProcess = createAsyncThunk('elections/startTallyingProcess', async (electionId) => {
-
+export const endVotingProcess = createAsyncThunk('elections/endVotingProcess', async (payload) => {
+    let result = await closeVote(payload.vaUrl, payload.electionId);
+    return result;
 });
 
 export const getElections = createAsyncThunk('elections/getElections', async (vaUrl) => {
@@ -56,6 +59,9 @@ export const electionsSlice = createSlice({
         },
         [newVote.fulfilled]: (state, action) => {
             console.log('created vote')
+        },
+        [startTallyingProcess.fulfilled]: (state, action) => {
+            console.log('started tallying')
         },
     }
 })

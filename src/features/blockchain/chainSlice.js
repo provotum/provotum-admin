@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { checkVotingAuthorityUp, getRegisteredSealers, fetchChainSpec, createChainSpec, startChainNode, checkChainUp, stopChainNode } from './api/index';
+import { checkVotingAuthorityUp, getRegisteredSealers, fetchChainSpec, createChainSpec, startChainNode, checkChainUp, stopChainNode, fetchPeer } from './api/index';
 
 export const checkUp = createAsyncThunk('chain/checkUp', async (vaUrl) => {
     let result = await checkVotingAuthorityUp(vaUrl)
@@ -13,6 +13,11 @@ export const checkChain = createAsyncThunk('chain/checkChainup', async (sealer) 
 
 export const getSealers = createAsyncThunk('chain/getSealers', async (vaUrl) => {
     let result = await getRegisteredSealers(vaUrl)
+    return result
+});
+
+export const getPeer = createAsyncThunk('chain/getPeer', async (vaUrl) => {
+    let result = await fetchPeer(vaUrl)
     return result
 });
 
@@ -50,6 +55,7 @@ export const slice = createSlice({
         sealers: [],
         spec: {},
         chain: {},
+        peer: {},
     },
     //can only mutate the state directly when using the createSlice from the toolkit
     reducers: {
@@ -73,6 +79,9 @@ export const slice = createSlice({
             })
             //state.sealers = state.sealers.concat(action.payload);
         },
+        [getPeer.fulfilled]: (state, action) => {
+            state.peer = action.payload;
+        },
         [getSpec.fulfilled]: (state, action) => {
             state.spec = action.payload;
         },
@@ -91,4 +100,5 @@ export const selectHealth = state => state.chain.vaHealth;
 export const selectSealers = state => state.chain.sealers;
 export const selectSpec = state => state.chain.spec;
 export const selectChain = state => state.chain.chain;
+export const selectPeer = state => state.chain.peer;
 export default slice.reducer;
