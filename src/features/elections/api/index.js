@@ -27,6 +27,22 @@ export const getVotes = async (vaUrl) => {
   }
 };
 
+export const fetchResults = async (vaUrl, electionId) => {
+  console.log(`fetching results vor vote ${electionId}`);
+  try {
+    let response = await axios.get(`http://${vaUrl}/votes/results`, {
+      params: {
+        voteId: electionId
+      }
+    });
+    console.log(response.data);
+    return response.data;
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 export const combineDistributedKeys = async (vaUrl, electionId) => {
   console.log("combinging dkg keys");
   try {

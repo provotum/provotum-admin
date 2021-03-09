@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { checkVotingAuthorityUp, getRegisteredSealers, fetchChainSpec, createChainSpec, startChainNode, checkChainUp, stopChainNode, fetchPeer } from './api/index';
+import { checkValidatorKeysForSealer, checkVotingAuthorityUp, getRegisteredSealers, fetchChainSpec, createChainSpec, startChainNode, checkChainUp, stopChainNode, fetchPeer } from './api/index';
 
 export const checkUp = createAsyncThunk('chain/checkUp', async (vaUrl) => {
     let result = await checkVotingAuthorityUp(vaUrl)
@@ -12,7 +12,14 @@ export const checkChain = createAsyncThunk('chain/checkChainup', async (sealer) 
 });
 
 export const getSealers = createAsyncThunk('chain/getSealers', async (vaUrl) => {
-    let result = await getRegisteredSealers(vaUrl)
+    let result = await getRegisteredSealers(vaUrl);
+
+    return result
+});
+
+export const getValidatorKeysForSealer = createAsyncThunk('chain/getValidatorKeysForSealer', async (payload) => {
+    let result = await checkValidatorKeysForSealer(payload.vaUrl, payload.sealer);
+    console.log(result);
     return result
 });
 
@@ -64,6 +71,12 @@ export const slice = createSlice({
         }
     },
     extraReducers: {
+        [getValidatorKeysForSealer.fulfilled]: (state, action) => {
+            let sealer = state.sealers.find(s => s.name === action.payload.sealerName);
+            if (sealer) {
+                sealer.validatorKeysInserted = action.payload.response.auraAddress && action.payload.response.grandpaAddress;
+            }
+        },
         [checkUp.fulfilled]: (state, action) => {
             state.vaHealth = action.payload;
         },
@@ -74,6 +87,7 @@ export const slice = createSlice({
             action.payload.forEach(s => {
                 let exists = state.sealers.map(ss => ss.name).find(n => n === s.name);
                 if (!exists) {
+                    s.validatorKeysInserted = false;
                     state.sealers.push(s);
                 }
             })

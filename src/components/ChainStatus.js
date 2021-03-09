@@ -1,6 +1,6 @@
 import { Typography, Button } from '@material-ui/core';
 import React, { useEffect } from 'react'
-import { checkUp, getSealers, getSpec, createSpec, selectHealth, selectPeer, selectSealers, selectSpec, startChain, checkChain, stopChain, selectChain, getPeer } from './../features/blockchain/chainSlice';
+import { getValidatorKeysForSealer, checkUp, getSealers, getSpec, createSpec, selectHealth, selectPeer, selectSealers, selectSpec, startChain, checkChain, stopChain, selectChain, getPeer } from './../features/blockchain/chainSlice';
 import { useDispatch, useSelector } from 'react-redux';
 
 export function ChainStatus({ match }) {
@@ -38,9 +38,24 @@ export function ChainStatus({ match }) {
         dispatch(getSpec(vaUrl));
     }, [dispatch, vaUrl]);
 
+    const triggercheckValidatorKeys = (sealer) => {
+        console.log('checking validator keys for sealer')
+        dispatch(getValidatorKeysForSealer({ vaUrl, sealer }));
+    }
+
+
     const renderSealers = sealers.map(s => (
         <div key={s.auraAddress} className="sealer">
-            <div><Typography variant="body1">name: {s.name}</Typography></div>
+            <div>
+                <Typography variant="body1">name: {s.name}</Typography>
+                {!s.validatorKeysInserted ? (
+                    <Button onClick={() => { triggercheckValidatorKeys(s) }}>check val keys</Button>
+
+                ) : (
+                    <p>keys inserted!</p>
+                )}
+
+            </div>
 
         </div>
     ));
@@ -65,6 +80,7 @@ export function ChainStatus({ match }) {
         dispatch(createSpec(vaUrl));
     }
 
+
     const triggerStartChain = () => {
         console.log('starting chain');
         dispatch(startChain(vaUrl, false))
@@ -83,23 +99,26 @@ export function ChainStatus({ match }) {
         dispatch(checkChain(vaUrl));
     };
     const renderControls = () => {
-        if (chain) {
-            return (
-                <div>
+        return (
+            <div>
+                {!spec.name ? (
                     <Button onClick={triggerCreateSpec}>create spec</Button>
+                ) : (
+                    <Button onClick={triggerCreateSpec}>re-crate spec</Button>
+                )}
+                {!chain ? (
                     <Button onClick={triggerStartChain}>start chain</Button>
-                    <Button onClick={triggerRestartChain}>restart chain</Button>
-                    <Button onClick={triggerStopChain}>stop chain</Button>
-                </div>
-            )
-        } else {
-            return (
-                <div>
-                    <Button onClick={triggerCreateSpec}>create spec</Button>
-                    <Button onClick={triggerStartChain}>start chain</Button>
-                </div>
-            )
-        }
+                ) : (
+                    <div>
+                        <Button onClick={triggerRestartChain}>restart chain</Button>
+                        <Button onClick={triggerStopChain}>stop chain</Button>
+                    </div>
+
+                )}
+
+            </div>
+        )
+
     }
 
 

@@ -19,6 +19,23 @@ export const getRegisteredSealers = async (vaUrl) => {
 
 }
 
+export const checkValidatorKeysForSealer = async (vaUrl, sealer) => {
+    console.log(sealer.grandpaAddress, sealer.auraAddress);
+    let response = await axios.get(`http://${vaUrl}/bootstrap/validators`,
+        {
+            params: {
+                auraAddress: sealer.auraAddress,
+                grandpaAddress: sealer.grandpaAddress
+            }
+
+        });
+    console.log(response);
+    return {
+        sealerName: sealer.name,
+        response: response.data,
+    }
+}
+
 export const createChainSpec = async (vaUrl) => {
     console.log('sending out spec')
     try {

@@ -80,13 +80,44 @@ export function ElectionCard(props) {
     }
   };
 
+  const electionResults = (result) => {
+    return (
+      <div>
+        {result.yes > result.no ? (
+          <div>
+            <Typography variant="body2" color="green" component="p">
+              {`Yes (${result.yes})`}
+            </Typography>
+            <Typography variant="body2" color="red" component="p">
+              {`No (${result.no})`}
+            </Typography>
+          </div>
+        ) : (
+          <div>
+            <Typography variant="body2" color="red" component="p">
+              {`Yes (${result.yes})`}
+            </Typography>
+            <Typography variant="body2" color="green" component="p">
+              {`No (${result.no})`}
+            </Typography>
+          </div>
+        )}
+      </div>
+    )
+  }
+
   const electionSubjects = (election) => {
     return election.subjects.map((s) => (
       <div key={election.electionId + s[0]}>
         <Typography paragraph>{s[1]}</Typography>
-        <Typography variant="body2" color="textSecondary" component="p">
-          {"Yes"}, {"No"}
-        </Typography>
+        {election.results.find(r => r.subject_id === s[0]) ? (
+          electionResults(election.results.find(r => r.subject_id === s[0]))
+        ) : (
+          <Typography variant="body2" color="textSecondary" component="p">
+            {"Yes"}, {"No"}
+          </Typography>
+        )}
+
       </div>
     ));
   };
@@ -111,7 +142,8 @@ export function ElectionCard(props) {
         };
       default:
         return {
-          message: "Unknown step",
+          message: "This vote has concluded and the results are available",
+          button: false,
         };
     }
   }
@@ -120,10 +152,16 @@ export function ElectionCard(props) {
     "DistributedKeyGeneration",
     "Voting",
     "Tallying",
-    "conclusion",
+    "Results",
   ];
-  const [activeStep, setActiveStep] = React.useState(
-    steps.indexOf(election.phase)
+  const [activeStep, setActiveStep] = React.useState(() => {
+    let step = steps.indexOf(election.phase);
+    if (step === 2 && election.results.length > 0) {
+      step = 3;
+    }
+    return step;
+  }
+
   );
 
   const handleNext = () => {
@@ -168,14 +206,17 @@ export function ElectionCard(props) {
                 <Typography>{getStepContent(index).message}</Typography>
                 <div className={classes.actionsContainer}>
                   <div>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={handleNext}
-                      className={classes.button}
-                    >
-                      {getStepContent(index).button}
-                    </Button>
+                    {getStepContent(index).button && (
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleNext}
+                        className={classes.button}
+                      >
+                        {getStepContent(index).button}
+                      </Button>
+                    )}
+
                   </div>
                 </div>
               </StepContent>
@@ -198,13 +239,6 @@ export function ElectionCard(props) {
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
-          <Button
-            onClick={() => {
-              triggerDkg(election.electionId);
-            }}
-          >
-            dkg
-          </Button>
           {electionSubjects(election)}
         </CardContent>
       </Collapse>
