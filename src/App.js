@@ -44,6 +44,17 @@ const useStyles = makeStyles((theme) => ({
 function App() {
   const classes = useStyles();
   const dispatch = useDispatch();
+
+  const { keyring, keyringState, api } = useSubstrate();
+
+  useEffect(async () => {
+    if (api && api.query && api.query.system) {
+      console.log('Initializing...');
+      console.log(api.query);
+      let events = await api.query
+
+    }
+  }, [dispatch, api]);
   //const { api } = useSubstrate();
   const electionStatus = useSelector(state => state.elections.status);
   useEffect(() => {

@@ -35,6 +35,8 @@ let theme = createMuiTheme({
 theme = responsiveFontSizes(theme);
 
 
+
+
 ReactDOM.render(
   <React.StrictMode>
     <SubstrateContextProvider>

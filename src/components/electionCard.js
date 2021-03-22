@@ -20,6 +20,7 @@ import {
   combineDkgKeys,
   startTallyingProcess,
   endVotingProcess,
+  getElectionPublicKeyShares
 } from "./../features/elections/electionSlice";
 import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
@@ -52,6 +53,9 @@ const useStyles = makeStyles((theme) =>
 );
 
 export function ElectionCard(props) {
+
+
+
   let election = props.election;
   const dispatch = useDispatch();
   const [expanded, setExpanded] = useState(false);
@@ -160,9 +164,7 @@ export function ElectionCard(props) {
       step = 3;
     }
     return step;
-  }
-
-  );
+  });
 
   const handleNext = () => {
     console.log(`current step: ${steps[activeStep]}`);
@@ -204,6 +206,7 @@ export function ElectionCard(props) {
               <StepLabel>{label}</StepLabel>
               <StepContent>
                 <Typography>{getStepContent(index).message}</Typography>
+
                 <div className={classes.actionsContainer}>
                   <div>
                     {getStepContent(index).button && (
@@ -215,6 +218,11 @@ export function ElectionCard(props) {
                       >
                         {getStepContent(index).button}
                       </Button>
+                    )}
+                    {label === 'DistributedKeyGeneration' && (
+                      <Typography variant="body2">
+                        {`got ${election.shares.length} key shares`}
+                      </Typography>
                     )}
 
                   </div>

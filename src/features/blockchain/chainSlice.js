@@ -61,7 +61,7 @@ export const slice = createSlice({
         vaHealth: '',
         sealers: [],
         spec: {},
-        chain: {},
+        chain: false,
         peer: {},
     },
     //can only mutate the state directly when using the createSlice from the toolkit
