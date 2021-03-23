@@ -71,7 +71,7 @@ function App() {
 
   return (
     <Router>
-      <div className="App">
+      <div className="App bg-provotum">
         <header className="App-header">
           <AppBar position="static" >
             <Toolbar>

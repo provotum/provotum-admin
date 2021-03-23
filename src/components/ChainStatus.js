@@ -7,11 +7,14 @@ import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
 import StepContent from "@material-ui/core/StepContent";
 import CircularProgress from '@material-ui/core/CircularProgress';
-
+import Particles from "react-tsparticles";
+import particles_config from './../assets/particles';
 export function ChainStatus({ match }) {
 
     const vaUrl = process.env.REACT_APP_VA_URL
     const dispatch = useDispatch();
+    const [particlesConfig, setParticlesConfig] = React.useState(particles_config);
+
     const [startingStata, setStartingState] = React.useState(0);
     const health = useSelector(selectHealth);
     const sealers = useSelector(selectSealers);
@@ -22,8 +25,15 @@ export function ChainStatus({ match }) {
         dispatch(checkUp(vaUrl));
     }, [dispatch, vaUrl]);
 
-    useEffect(() => {
-        dispatch(checkChain(vaUrl));
+    useEffect(async () => {
+        await dispatch(checkChain(vaUrl));
+        if (chain) {
+            let config = particlesConfig;
+            config.particles.move.enable = true;
+            config.particles.number.value = 12;
+            config.particles.opacity.value = 0.5
+            setParticlesConfig(config);
+        }
     }, [dispatch, vaUrl]);
 
     useEffect(() => {
@@ -33,6 +43,7 @@ export function ChainStatus({ match }) {
     useEffect(() => {
         dispatch(getPeer(vaUrl));
     }, [dispatch, vaUrl]);
+
 
     /*useEffect(() => {
         dispatch(createSpec(vaUrl));
@@ -91,7 +102,12 @@ export function ChainStatus({ match }) {
         setStartingState(1);
         await dispatch(createSpec(vaUrl));
         setStartingState(2);
-        dispatch(startChain(vaUrl, false));
+        await dispatch(startChain(vaUrl, false));
+        let config = particlesConfig;
+        config.particles.number.value = 12;
+        config.particles.move.enable = true;
+        config.particles.opacity.value = 0.5;
+        setParticlesConfig(config);
 
     }
     const triggerRestartChain = () => {
@@ -102,6 +118,11 @@ export function ChainStatus({ match }) {
     const triggerStopChain = () => {
         console.log('stopping chain');
         dispatch(stopChain(vaUrl))
+        let config = particlesConfig;
+        config.particles.move.enable = false;
+        config.particles.opacity.value = 0;
+        config.particles.number.value = 0;
+        setParticlesConfig(config);
     }
 
     const triggerCheckUp = () => {
@@ -114,65 +135,62 @@ export function ChainStatus({ match }) {
         return chain ? 1 : 0;
     });
 
+    function particlesInit(main) {
+
+        console.log(main);
+        // you can initialize the tsParticles instance (main) here, adding custom shapes or presets
+    }
+
+    function particlesLoaded(container) {
+        console.log(container);
+    }
+
 
     return (
-        <div>
-            <Card>
-                <Stepper activeStep={chain ? 1 : 0} orientation="vertical">
-                    <Step>
-                        <StepLabel>Waiting for sealers</StepLabel>
-                        <StepContent>
-                            {health.health === 'up' ? (
-                                <div>
-                                    <Typography>
-                                        {`The Chain is currently ${chain ? 'up' : 'down'} and waiting for Sealers to register,
+        <div className='content h-100'>
+            <Particles
+                init={particlesInit}
+                loaded={particlesLoaded}
+                className="particles"
+                options={particlesConfig}>
+
+            </Particles>
+            <div className="container">
+                <h1>Provotum</h1>
+                <div className="card">
+                    <div className="card-title">
+                        System Health
+                    </div>
+                    <div className="card-body">
+                        <Typography>
+                            {`The Chain is currently ${chain ? 'up' : 'down'} and waiting for Sealers to register,
                                         you can start the chain anytime.`}
-                                    </Typography>
-                                    <Typography>
-                                        {`Currently, there are ${sealers.length} sealers registered`}
-                                    </Typography>
-                                    <Button
-                                        variant="contained"
-                                        color="primary"
-                                        onClick={triggerStartChain}
-                                    >
-                                        start chain
-                      </Button>
-                                </div>
-                            ) : (
-                                <Typography>
-                                    {`The VA server is currently ${health.health}`}
-                                </Typography>
-                            )}
+                        </Typography>
+                        <Typography>
+                            {`Currently, there are ${sealers.length} sealers registered`}
+                        </Typography>
+                        {chain ? (
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={triggerStopChain}
+                            >
+                                stop chain
+                            </Button>
+                        ) : (
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={triggerStartChain}
+                            >
+                                start chain
+                            </Button>
+                        )}
 
-                            {startingStata === 1 && (
-                                <div>
-                                    <CircularProgress />
-                                    <Typography>creating chain spec</Typography>
-                                </div>
-                            )}
-                            {startingStata === 2 && (
-                                <div>
-                                    <CircularProgress />
-                                    <Typography>starting chain</Typography>
-                                </div>
-                            )}
-                        </StepContent>
-                    </Step>
-                    <Step>
-                        <StepLabel>Online</StepLabel>
-                        <StepContent>
-                            <Button onClick={triggerStopChain}>stop chain</Button>
-                            <Typography></Typography>
-                        </StepContent>
-                    </Step>
-
-                </Stepper>
-            </Card>
-            <Typography variant="h2">Sealers</Typography>
-            <div className="sealer-container">
-                {renderSealers}
+                    </div>
+                </div>
             </div>
+
 
         </div >
     )
