@@ -1,31 +1,25 @@
 import React, { useEffect, useState } from 'react'
 import './App.css';
+import '../node_modules/react-grid-layout/css/styles.css'
+import '../node_modules/react-resizable/css/styles.css'
 import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Redirect,
+  Redirect
 } from 'react-router-dom'
-import { VoteList } from './components/voteList';
-import { AddVoteForm } from './components/addVoteForm';
+import { Dashboard } from './components/Dashboard';
 import { SingleVotePage } from './components/SingleVotePage';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import { Link as RouterLink } from 'react-router-dom';
-import Link from '@material-ui/core/Link';
 
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 import { makeStyles } from '@material-ui/core/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { useSubstrate } from './substrate';
 
 import { getElections } from './features/elections/electionSlice';
-import { ChainStatus } from './components/ChainStatus';
-
+import { checkChain, externalAddresses } from './features/blockchain/chainSlice';
+import { restoreAppStates, restoreLayout, newEvent } from './features/uiBuilder/uiSlice';
 const vaUrl = process.env.REACT_APP_VA_URL
 
 
@@ -48,11 +42,29 @@ function App() {
   const { keyring, keyringState, api } = useSubstrate();
 
   useEffect(async () => {
-    if (api && api.query && api.query.system) {
+    if (api) {
       console.log('Initializing...');
       console.log(api.query);
       let events = await api.query
+      const peerId = await api.rpc.system.localPeerId();
+      const networkState = await api.rpc.system.networkState();
 
+      const listenedAddresses = networkState.listenedAddresses.toHuman(true);
+
+      const addresses = networkState.externalAddresses.toHuman(true);
+      console.log(peerId);
+      console.log(externalAddresses);
+      dispatch(externalAddresses(addresses))
+    }
+    if (api && api.query && api.query.system) {
+      api.query.system.events((events) => {
+        events.forEach((record) => {
+          const { event } = record;
+          if (event.section === 'provotum') {
+            dispatch(newEvent(event.meta.documentation.toString()));
+          }
+        });
+      });
     }
   }, [dispatch, api]);
   //const { api } = useSubstrate();
@@ -63,37 +75,21 @@ function App() {
     }
   }, [electionStatus, dispatch]);
 
-  const [drawerOpen, setDrawerOpen] = useState(false);
+  useEffect(() => {
+    dispatch(restoreLayout());
+    dispatch(restoreAppStates());
+    dispatch(checkChain(vaUrl));
+  }, [dispatch]);
 
-  const toggleDrawer = (state) => {
-    setDrawerOpen(state);
-  }
+
 
   return (
     <Router>
-      <div className="App bg-provotum">
+      <div className="App">
+
         <header className="App-header">
           <AppBar position="static" >
-            <Toolbar>
-              <IconButton
-                onClick={() => { toggleDrawer(true) }}
-                edge="start"
-                className={classes.menuButton} color="inherit" aria-label="menu">
-                <MenuIcon />
-              </IconButton>
 
-              <Typography variant="h6" className={classes.title}>
-                Provotum
-    </Typography>
-              <Link component={RouterLink} to="/" color="inherit">
-                home
-    </Link>
-              <Link component={RouterLink} to="/chain" color="inherit">
-                chain
-    </Link>
-              <Button color="inherit">Login</Button>
-
-            </Toolbar>
           </AppBar>
         </header>
         <div className="body">
@@ -107,25 +103,20 @@ function App() {
                   <React.Fragment>
                     <CssBaseline />
 
-                    <VoteList />
-                    <AddVoteForm />
+                    <Dashboard />
 
                   </React.Fragment>
                 )}
               />
+
               <Route
                 exact
-                path="/chain"
+                path="/elections/:electionId"
                 render={() => (
                   <React.Fragment>
-                    <CssBaseline />
-
-                    <ChainStatus />
-
+                    <SingleVotePage></SingleVotePage>
                   </React.Fragment>
-                )}
-              />
-              <Route exact path="/votes/:voteId" component={SingleVotePage} />
+                )}></Route>
               <Redirect to="/" />
             </Switch>
 

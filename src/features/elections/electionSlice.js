@@ -2,9 +2,9 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { hexToBn } from '@polkadot/util';
 import { fetchPublicKeyShares, createVote, getVotes, combineDistributedKeys, startTally, closeVote, fetchResults } from './api/index';
 // Async Actions (thunks)
-export const newVote = createAsyncThunk('chain/newVote', async (vaUrl) => {
+export const newVote = createAsyncThunk('chain/newVote', async (payload) => {
     console.log('creating new vote');
-    let result = await createVote(vaUrl);
+    let result = await createVote(payload);
     return result;
 })
 
@@ -87,7 +87,8 @@ export const { electionAdded } = electionsSlice.actions;
 
 //export selectors
 export const selectElections = state => state.elections.elections;
-export const selectElectionById = (state, electionId) => state.elections.elections.find((election) => election.id === electionId);
+export const selectVotingElections = state => state.elections.elections.filter(e => e.phase === 'Voting');
+export const selectElectionById = (state, electionId) => state.elections.elections.find((election) => election.electionId === electionId);
 
 //export reducer
 export default electionsSlice.reducer;

@@ -7,11 +7,20 @@ export const checkVotingAuthorityUp = async (vaUrl) => {
 }
 
 export const checkChainUp = async (vaUrl) => {
-    let response = await axios.get(`http://${vaUrl}/bootstrap/chain`);
-    console.log('chain up', response.data);
-    return response.data === 'ESRCH' ? false : true;
+    try {
+        let response = await axios.get(`http://${vaUrl}/votes`);
+        console.log('chain up', response.data);
+        return response.data ? true : false;
+    } catch (e) {
+        console.log(e);
+        return false;
+    }
+
 }
 
+export const fetchPeers = async (vaUrl) => {
+    let resp
+}
 
 export const getRegisteredSealers = async (vaUrl) => {
     let response = await axios.get(`http://${vaUrl}/bootstrap/sealers`);
@@ -76,6 +85,7 @@ export const startChainNode = async (vaUrl, restart) => {
         return response.data;
     } catch (e) {
         console.log(e)
+        return false;
     }
 }
 

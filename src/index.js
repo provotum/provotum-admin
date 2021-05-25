@@ -25,9 +25,11 @@ let theme = createMuiTheme({
     ].join(','),
   },
   palette: {
-    primary: teal,
+    primary: {
+      main: '#A3BE8C'
+    },
     secondary: {
-      main: '#ff4081',
+      main: '#BF616A',
     },
   },
 });

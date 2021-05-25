@@ -1,13 +1,15 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { checkValidatorKeysForSealer, checkVotingAuthorityUp, getRegisteredSealers, fetchChainSpec, createChainSpec, startChainNode, checkChainUp, stopChainNode, fetchPeer } from './api/index';
 
+
 export const checkUp = createAsyncThunk('chain/checkUp', async (vaUrl) => {
     let result = await checkVotingAuthorityUp(vaUrl)
     return result
 });
 
-export const checkChain = createAsyncThunk('chain/checkChainup', async (sealer) => {
-    let result = await checkChainUp(sealer);
+export const checkChain = createAsyncThunk('chain/checkChain', async (vaUrl) => {
+    let result = await checkChainUp(vaUrl);
+    console.log('arstartratartartr', result);
     return result;
 });
 
@@ -42,12 +44,14 @@ export const createSpec = createAsyncThunk('chain/createChainSpec', async (vaUrl
 export const startChain = createAsyncThunk('chain/startChain', async (vaUrl, restart) => {
     console.log('starting chain')
     let result = await startChainNode(vaUrl, restart);
-    return result
+    console.log('started', result);
+    return result;
 });
 
 export const stopChain = createAsyncThunk('chain/stopChain', async (vaUrl, restart) => {
     console.log('stoping chain')
     let result = await stopChainNode(vaUrl, restart);
+    console.log('stoped', result);
     return result
 });
 
@@ -62,15 +66,31 @@ export const slice = createSlice({
         sealers: [],
         spec: {},
         chain: false,
-        peer: {},
+        peers: [],
     },
     //can only mutate the state directly when using the createSlice from the toolkit
     reducers: {
         setUrl: (state, action) => {
             state.url = action.payload
+        },
+        externalAddresses: (state, action) => {
+            state.peers = action.payload;
+        },
+        setChain: (state, action) => {
+            state.chain = action.payload;
         }
     },
     extraReducers: {
+        [startChain.fulfilled]: (state, action) => {
+            if (action.payload.pid) {
+                state.chain = true;
+            }
+        },
+        [stopChain.fulfilled]: (state, action) => {
+            if (action.payload.killed) {
+                state.chain = false;
+            }
+        },
         [getValidatorKeysForSealer.fulfilled]: (state, action) => {
             let sealer = state.sealers.find(s => s.name === action.payload.sealerName);
             if (sealer) {
@@ -106,13 +126,12 @@ export const slice = createSlice({
     }
 })
 
-export const { setUrl } = slice.actions
-
+export const { setUrl, externalAddresses, setChain } = slice.actions
 
 //this function is called a 'selector' and is basically a getter for less code in the part accessing the store
 export const selectHealth = state => state.chain.vaHealth;
 export const selectSealers = state => state.chain.sealers;
 export const selectSpec = state => state.chain.spec;
 export const selectChain = state => state.chain.chain;
-export const selectPeer = state => state.chain.peer;
+export const selectPeers = state => state.chain.peers;
 export default slice.reducer;

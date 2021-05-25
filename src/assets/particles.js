@@ -1,7 +1,7 @@
 export default {
     "particles": {
         "number": {
-            "value": 0,
+            "value": 12,
             "density": {
                 "enable": true,
                 "value_area": 800
@@ -26,7 +26,7 @@ export default {
             }
         },
         "opacity": {
-            "value": 0.0,
+            "value": 0.5,
             "random": false,
             "anim": {
                 "enable": false,
@@ -53,7 +53,7 @@ export default {
             "width": 2
         },
         "move": {
-            "enable": false,
+            "enable": true,
             "speed": 2,
             "direction": "none",
             "random": false,

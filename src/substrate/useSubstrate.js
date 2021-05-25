@@ -29,24 +29,25 @@ const useSubstrate = () => {
         _api.on('ready', () => {
             dispatch({ type: 'CONNECT_SUCCESS' })
             _api.query.system.events((events) => {
-                console.log(`\nReceived ${events.length} events:`);
+                //console.log(`\nReceived ${events.length} events:`);
 
                 // Loop through the Vec<EventRecord>
                 events.forEach((record) => {
+                    //console.log('record ', record);
                     // Extract the phase, event and the event types
                     const { event, phase } = record;
                     const types = event.typeDef;
                     if (event.section === 'provotum') {
                         if (event.method === 'PublicKeyShareSubmitted') {
-                            console.log('public key share submitted');
+                            //console.log('public key share submitted');
                             event.data.forEach((data, index) => {
-                                console.log(`\t\t\t${types[index].type}: ${data.public_key}`);
+                                //console.log(`\t\t\t${types[index].type}: ${data.public_key}`);
                             });
                         }
-                        console.log(`\t\t${event.meta.documentation.toString()}`);
-                        event.data.forEach((data, index) => {
-                            console.log(`\t\t\t${types[index].type}: ${data.toString()}`);
-                        });
+                        //console.log(`\t\t${event.meta.documentation.toString()}`);
+                        // event.data.forEach((data, index) => {
+                        //console.log(`\t\t\t${types[index].type}: ${data.toString()}`);
+                        //});
                     }
                     // Show what we are busy with
                     // console.log(`\t${event.section}:${event.method}:: (phase=${phase.toString()})`);
