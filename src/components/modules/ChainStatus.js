@@ -93,7 +93,7 @@ export function ChainStatus(props) {
     }
 
     function particlesLoaded(container) {
-        console.log(container);
+        //console.log(container);
     }
 
 

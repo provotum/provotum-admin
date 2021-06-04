@@ -55,7 +55,7 @@ export const restoreAppStates = createAsyncThunk('uiBuilder/restoreAppStates', a
         { name: 'System Health', i: 'SystemHealth', active: true, optional: true },
         { name: 'Sealer Status', i: 'SealerStatus', active: true, optional: true },
         { name: 'Vote List', i: 'VoteList', active: true, optional: false },
-        { name: 'System Status', i: 'ChainStatus', active: true, optional: false },
+        { name: 'System Status', i: 'ChainStatus', active: true, optional: true },
         { name: 'Logs', i: 'LiveLogs', active: true, optional: true },
 
     ];

@@ -70,11 +70,11 @@ export function Dashboard() {
                 <GridLayout
                     className="layout"
                     layout={layout}
-                    cols={6}
+                    cols={8}
                     rowHeight={80}
                     isDraggable={dragMode}
                     isResizable={dragMode}
-                    width={1200}
+                    width={1800}
                     resizeHandles={['se']}
                     onLayoutChange={(layout) => saveLayout(layout)}
                 >

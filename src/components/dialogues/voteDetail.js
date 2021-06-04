@@ -176,7 +176,13 @@ export function VoteDetail(props) {
                             <Typography variant="body2">
                                 {`This vote is currently being tallied`}
                             </Typography>
-                            <Button variant="contained" color="primary">publish</Button>
+                            <Button
+                                onClick={() => {
+                                    dispatch(
+                                        endVotingProcess({ vaUrl: vaUrl, electionId: election.electionId })
+                                    )
+                                }}
+                                variant="contained" color="primary">publish</Button>
                         </div>
                     );
                 }
@@ -188,7 +194,13 @@ export function VoteDetail(props) {
                         <Typography variant="body2">
                             {`This vote is currently open`}
                         </Typography>
-                        <Button variant="contained" color="primary">stop voting</Button>
+                        <Button
+                            onClick={() => {
+                                dispatch(
+                                    endVotingProcess({ vaUrl: vaUrl, electionId: election.electionId })
+                                )
+                            }}
+                            variant="contained" color="primary">start tallying</Button>
                     </div>
                 );
                 break;
