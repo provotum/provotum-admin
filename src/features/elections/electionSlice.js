@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { hexToBn } from '@polkadot/util';
 import { fetchPublicKeyShares, createVote, getVotes, combineDistributedKeys, startTally, closeVote, fetchResults } from './api/index';
 // Async Actions (thunks)
 export const newVote = createAsyncThunk('chain/newVote', async (payload) => {

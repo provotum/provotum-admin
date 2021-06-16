@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react'
-import { useSubstrate } from '../../substrate';
+import React from 'react'
 import { useSelector } from 'react-redux';
 import { selectEvents } from '../../features/uiBuilder/uiSlice';
 

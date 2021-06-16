@@ -2,28 +2,21 @@ import { Typography, Chip, Button, IconButton } from '@material-ui/core';
 import { HowToVote, ThumbDown, ThumbUp } from '@material-ui/icons';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import Stepper from "@material-ui/core/Stepper";
-import Step from "@material-ui/core/Step";
-import StepLabel from "@material-ui/core/StepLabel";
-import StepContent from "@material-ui/core/StepContent";
 import { useDispatch } from "react-redux";
 import CloseIcon from '@material-ui/icons/Close';
 
-import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
+import { makeStyles, createStyles } from "@material-ui/core/styles";
 import {
     selectElections,
 } from './../../features/elections/electionSlice';
 
-import { closeVote } from "./../../features/elections/api";
 import { selectSealers } from './../../features/blockchain/chainSlice';
 
 import {
     combineDkgKeys,
-    startTallyingProcess,
     endVotingProcess,
-    getElectionPublicKeyShares
 } from "./../../features/elections/electionSlice";
-import { closeVoteDetail, selectSelectedElection, selectVoteDetailOpen } from '../../features/uiBuilder/uiSlice';
+import { closeVoteDetail, selectSelectedElection } from '../../features/uiBuilder/uiSlice';
 export function VoteDetail(props) {
     let electionId = useSelector(selectSelectedElection);
     //const open = useSelector(selectVoteDetailOpen);

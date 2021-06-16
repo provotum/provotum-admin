@@ -1,14 +1,11 @@
-import { Typography, Button, Card, CardContent } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 import React, { useState } from 'react'
-import { getValidatorKeysForSealer, checkUp, getSealers, getSpec, createSpec, selectHealth, selectPeer, selectSealers, selectSpec, startChain, checkChain, stopChain, selectChain, getPeer } from '../../features/blockchain/chainSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import {
     selectElections,
 } from '../../features/elections/electionSlice';
 import { ElectionCard } from './../electionCard';
-import {
-    GroupWork,
-} from "@material-ui/icons";
+
 import { openVoteForm, selectAddVoteFormOpen, selectVoteDetailOpen } from './../../features/uiBuilder/uiSlice';
 import AddCircleRoundedIcon from '@material-ui/icons/AddCircleRounded';
 import ButtonGroup from '@material-ui/core/ButtonGroup';

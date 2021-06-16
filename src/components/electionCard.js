@@ -1,32 +1,17 @@
-import {
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  CardHeader,
-  Typography,
-  Collapse,
-  IconButton,
-  Avatar,
-} from "@material-ui/core";
+
 import {
   Lock,
   HourglassEmpty,
   HowToVote,
   GroupWork,
-  Launch,
 } from "@material-ui/icons";
 import {
   combineDkgKeys,
-  startTallyingProcess,
-  endVotingProcess,
-  getElectionPublicKeyShares
 } from "./../features/elections/electionSlice";
 
-import { Link } from "react-router-dom";
 import { useState } from "react";
 import React from "react";
-import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
+import { makeStyles, createStyles } from "@material-ui/core/styles";
 
 import { useDispatch } from "react-redux";
 import { openVoteDetail, selectElection } from "../features/uiBuilder/uiSlice";

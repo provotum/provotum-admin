@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { selectAppStates, storeAppStates, toggleAppState } from '../../features/uiBuilder/uiSlice';
 import Switch from '@material-ui/core/Switch';
-import CloseIcon from '@material-ui/icons/Close';
 
 
 export function ModuleSelector(props) {

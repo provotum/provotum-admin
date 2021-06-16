@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { TextField, Button, Chip, IconButton, Divider } from '@material-ui/core';
+import { TextField, Button, IconButton } from '@material-ui/core';
 import { Save, Add, Backspace } from '@material-ui/icons';
 import CloseIcon from '@material-ui/icons/Close';
 import {

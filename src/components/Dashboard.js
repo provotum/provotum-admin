@@ -9,8 +9,7 @@ import { VoteList } from './modules/VoteList';
 import { VoterParticipation } from './modules/VoterParticipation';
 import { selectChain } from './../features/blockchain/chainSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { AddVoteForm } from './dialogues/addVoteForm';
-import { VoteDetail } from './dialogues/voteDetail';
+
 import { selectAddVoteFormOpen, selectAppStates, selectLayout, selectSelectedElection, selectVoteDetailOpen, storeLayout } from '../features/uiBuilder/uiSlice';
 import GridLayout from 'react-grid-layout';
 import { ModuleSelector } from './dialogues/moduleSelector';

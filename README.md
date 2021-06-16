@@ -1,3 +1,10 @@
+# Voting Authority Application
+
+This repository contains the code for the voting authority react application that was part of my thesis. Setup and run instructions may be found in the [infrastructure](https://github.com/provotum/provotum-infrastructure-claudio) repository. 
+
+There also is a template file for the `.env` file in here. 
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
