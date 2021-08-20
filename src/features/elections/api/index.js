@@ -3,7 +3,7 @@ const axios = require("axios").default;
 export const createVote = async (payload) => {
   console.log("creating vote : ", payload);
   try {
-    let response = await axios.post(`http://${payload.vaUrl}/votes`, {
+    let response = await axios.post(`${payload.vaUrl}/votes`, {
       title: payload.title,
       questions: payload.questions,
     });
@@ -18,7 +18,7 @@ export const createVote = async (payload) => {
 export const getVotes = async (vaUrl) => {
   console.log("fetching votes");
   try {
-    let response = await axios.get(`http://${vaUrl}/votes`);
+    let response = await axios.get(`${vaUrl}/votes`);
     return response.data;
   } catch (e) {
     console.log(e);
@@ -29,7 +29,7 @@ export const getVotes = async (vaUrl) => {
 export const fetchResults = async (vaUrl, electionId) => {
   console.log(`fetching results vor vote ${electionId}`);
   try {
-    let response = await axios.get(`http://${vaUrl}/votes/results`, {
+    let response = await axios.get(`${vaUrl}/votes/results`, {
       params: {
         voteId: electionId
       }
@@ -44,7 +44,7 @@ export const fetchResults = async (vaUrl, electionId) => {
 export const fetchPublicKeyShares = async (vaUrl, electionId) => {
   console.log(`fetching shares vor vote ${electionId}`);
   try {
-    let response = await axios.get(`http://${vaUrl}/votes/publicKeyShares`, {
+    let response = await axios.get(`${vaUrl}/votes/publicKeyShares`, {
       params: {
         voteId: electionId
       }
@@ -59,7 +59,7 @@ export const fetchPublicKeyShares = async (vaUrl, electionId) => {
 export const combineDistributedKeys = async (vaUrl, electionId) => {
   console.log("combinging dkg keys");
   try {
-    let response = await axios.post(`http://${vaUrl}/dkg`, {
+    let response = await axios.post(`${vaUrl}/dkg`, {
       electionId: electionId,
     });
     return response.data;
@@ -72,7 +72,7 @@ export const combineDistributedKeys = async (vaUrl, electionId) => {
 export const startTally = async (vaUrl, electionId) => {
   console.log("starting tally");
   try {
-    let response = await axios.post(`http://${vaUrl}/votes/tally`, {
+    let response = await axios.post(`${vaUrl}/votes/tally`, {
       voteId: electionId,
     });
     return response.data;
@@ -84,7 +84,7 @@ export const startTally = async (vaUrl, electionId) => {
 export const closeVote = async (vaUrl, electionId) => {
   console.log("closing vote");
   try {
-    let response = await axios.post(`http://${vaUrl}/votes/close`, {
+    let response = await axios.post(`${vaUrl}/votes/close`, {
       voteId: electionId,
     });
     return response.data;
